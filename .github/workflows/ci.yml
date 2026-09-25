@@ -12,7 +12,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           repository: kubernetes-sigs/external-dns
-          ref: 446dcf3f
+          ref: 446dcf3f2a0e01436414b71d09c773508489f924
           path: external-dns
       - uses: dtolnay/rust-toolchain@stable
         with:
