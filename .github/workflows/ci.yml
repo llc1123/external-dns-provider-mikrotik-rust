@@ -26,7 +26,7 @@ jobs:
         working-directory: rust
       - run: cargo build --release
         working-directory: rust
-      - uses: actions/setup-go@v6
+      - uses: actions/setup-go@v7
         with:
           go-version-file: rust/conformance/go.mod
           cache-dependency-path: rust/conformance/go.sum
