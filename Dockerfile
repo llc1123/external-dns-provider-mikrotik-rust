@@ -1,13 +1,12 @@
-FROM rust:stable-bookworm AS build
+FROM rust:1-trixie AS build
 WORKDIR /src
 COPY Cargo.toml Cargo.lock ./
 COPY src ./src
-RUN cargo build --release
+RUN cargo build --release --locked
 
-FROM debian:bookworm-slim
-RUN apt-get update && apt-get install -y --no-install-recommends ca-certificates && rm -rf /var/lib/apt/lists/* && useradd --system --create-home webhook
+FROM gcr.io/distroless/cc-debian13:nonroot
 COPY --from=build /src/target/release/external-dns-provider-mikrotik /usr/local/bin/external-dns-provider-mikrotik
-USER webhook
+USER 65532:65532
 ENV SERVER_HOST=0.0.0.0
 EXPOSE 8888 8080
 ENTRYPOINT ["/usr/local/bin/external-dns-provider-mikrotik"]
