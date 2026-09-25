@@ -1,0 +1,33 @@
+name: Rust CI
+on:
+  push:
+  pull_request:
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: rust
+      - uses: actions/checkout@v4
+        with:
+          repository: kubernetes-sigs/external-dns
+          ref: 446dcf3f
+          path: external-dns
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: stable
+          components: rustfmt, clippy
+      - run: cargo fmt --all -- --check
+        working-directory: rust
+      - run: cargo test --all-targets --all-features
+        working-directory: rust
+      - run: cargo clippy --all-targets --all-features -- -D warnings
+        working-directory: rust
+      - run: cargo build --release
+        working-directory: rust
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: rust/conformance/go.mod
+      - run: RUST_BINARY="$PWD/../target/release/external-dns-provider-mikrotik" go test -race -shuffle=on -count=1 ./...
+        working-directory: rust/conformance
