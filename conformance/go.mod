@@ -1,4 +1,4 @@
-module github.com/mirceanton/external-dns-provider-mikrotik-rust/conformance
+module github.com/llc1123/external-dns-provider-mikrotik-rust/conformance
 
 go 1.27.0
 
