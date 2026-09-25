@@ -6,10 +6,10 @@ jobs:
   checks:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           path: rust
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           repository: kubernetes-sigs/external-dns
           ref: 446dcf3f2a0e01436414b71d09c773508489f924
@@ -26,8 +26,9 @@ jobs:
         working-directory: rust
       - run: cargo build --release
         working-directory: rust
-      - uses: actions/setup-go@v5
+      - uses: actions/setup-go@v6
         with:
           go-version-file: rust/conformance/go.mod
+          cache-dependency-path: rust/conformance/go.sum
       - run: RUST_BINARY="$PWD/../target/release/external-dns-provider-mikrotik" go test -race -shuffle=on -count=1 ./...
         working-directory: rust/conformance
