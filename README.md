@@ -185,6 +185,28 @@ curl http://localhost:8080/metrics
 
 ## Container image
 
+The multi-stage Dockerfile builds with Rust on Debian 13 (Trixie) and runs on
+`gcr.io/distroless/cc-debian13:nonroot` as UID/GID `65532`. The runtime includes
+the libraries required by the GNU/Linux binary and CA certificates, without a
+shell or package manager. `.dockerignore` limits the build context to Cargo
+manifests, source code, and the Dockerfile.
+
+The `Publish container` workflow publishes Linux amd64 images to
+`ghcr.io/llc1123/external-dns-provider-mikrotik-rust` on every `main` push,
+version-tag push (for example `v1.2.3` or `1.2.3`), and manual Actions dispatch.
+It authenticates using the workflow's `GITHUB_TOKEN` with `packages: write`.
+
+| Trigger | Image tags |
+| --- | --- |
+| `main` push or manual run on `main` | `main`, `sha-<full-commit>` |
+| Semantic version tag | Version without `v`, major.minor, `sha-<full-commit>` |
+| Manual run on another branch | `sha-<full-commit>` |
+
+Prereleases retain their prerelease version and do not advance the major.minor
+alias. No `latest` alias is published. The image becomes available after this
+workflow has run successfully; GHCR package visibility is managed separately
+from repository visibility.
+
 ```sh
 docker build -t external-dns-provider-mikrotik-rust .
 docker run --rm \
