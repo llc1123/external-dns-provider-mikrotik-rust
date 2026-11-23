@@ -2,7 +2,7 @@ module github.com/llc1123/external-dns-provider-mikrotik-rust/conformance
 
 go 1.27.0
 
-require sigs.k8s.io/external-dns v0.23.0
+require sigs.k8s.io/external-dns v0.24.0
 
 require (
 	cloud.google.com/go/auth v0.23.2 // indirect
